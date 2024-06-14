@@ -1,12 +1,16 @@
 // generate minimal server for api with express
 import express from 'express';
 import { API_KEY } from './config.js';
-import OpenAI from "openai";
+import { OpenAI } from "openai";
 // handle form data posted
 import multer from 'multer';
 
-let conversations = JSON.parse(localStorage.getItem('conversations')) || {};
-let currentConversationId = localStorage.getItem('currentConversationId') || null;
+import('../client/js/sendRequestToServer.js').then(sendRequestToServer => {
+  const { getCurrentConversation } = sendRequestToServer;
+  // Vous pouvez maintenant utiliser getCurrentConversation ici
+}).catch(error => {
+  console.error('Failed to load the module:', error);
+});
 
 // create an instance of OpenAI with the api key
 const openai = new OpenAI({
@@ -33,7 +37,6 @@ app.post('/chat', upload.none(), async (req, res) => {
     // get prompt from the form data
     const prompt = req.body.prompt;
     console.log("PROMPT: ", prompt);
-    console.log("Conversation ID: ", conversationId);
     
     // send the prompt to the OpenAI API
     const response = await openai.chat.completions.create({
@@ -53,7 +56,7 @@ app.post('/chat', upload.none(), async (req, res) => {
 
       // send the response as json
         res.json(response);
-        res.json({ conversationId, response: response.data })
+        res.json({ getCurrentConversation, response: response.data })
 });
 
 app.post('/image', upload.none(), async (req, res) => {

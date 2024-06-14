@@ -6,6 +6,9 @@ let outputElement, submitButton, inputElement, convElement, historyElement, newC
 let conversations = JSON.parse(localStorage.getItem('conversations')) || {};
 let currentConversationId = localStorage.getItem('currentConversationId') || null;
 
+export function getCurrentConversation() {
+    return currentConversationId;
+}
 
 window.onload = init;
 
@@ -27,17 +30,16 @@ function init() {
     loadConversation(currentConversationId);
     loadHistory();
 }
-
 function newConversation() {
     const convId = 'conv' + Date.now();
-    conversations[convId] = []; // Initialise une nouvelle conversation vide
+    conversations[convId] = [];
     currentConversationId = convId;
     localStorage.setItem('currentConversationId', currentConversationId);
     localStorage.setItem('conversations', JSON.stringify(conversations));
     addConversationToHistory(convId);
-    displayConversation(convId); // Pour rafraîchir l'affichage
+    displayConversation(convId);
+    loadHistory();
 }
-
 function saveToHistory(message, isUser) {
     let history = conversations[currentConversationId] || [];
     history.push({ text: message, user: isUser });
@@ -45,7 +47,6 @@ function saveToHistory(message, isUser) {
     localStorage.setItem('conversations', JSON.stringify(conversations));
     addMessageToDisplay(message, isUser);
 }
-
 function addConversationToHistory(convId) {
     const pElement = document.createElement('p');
     pElement.textContent = `Conversation ${convId}`;
@@ -56,7 +57,17 @@ function addConversationToHistory(convId) {
     };
     historyElement.appendChild(pElement);
 }
-
+function deleteConversation(convId) {
+    delete conversations[convId];
+    localStorage.setItem('conversations', JSON.stringify(conversations));
+    historyElement.innerHTML = '';
+    loadHistory();
+}
+function clearHistory(convId) {
+    conversations[convId] = [];
+    localStorage.setItem('conversations', JSON.stringify(conversations));
+    displayConversation(convId);
+}
 function displayConversation(convId) {
     const history = conversations[convId] || [];
     convElement.innerHTML = ''; 
@@ -64,7 +75,6 @@ function displayConversation(convId) {
         addMessageToDisplay(item.text, item.user);
     });
 }
-
 function loadConversation(convId) {
     currentConversationId = convId;
     const history = JSON.parse(localStorage.getItem(convId)) || [];
@@ -73,7 +83,6 @@ function loadConversation(convId) {
         addMessageToHistory(item.text, item.user);
     });
 }
-
 
 function loadHistory() {
     Object.keys(conversations).forEach(convId => {
@@ -108,10 +117,10 @@ async function getMessage() {
         const imagePrompt = prompt.replace('/image', '').trim();
         getImageFromDallE(imagePrompt);
     } if(prompt.startsWith('/clear')) {
-        saveToHistory(prompt, true);
-        conversations[currentConversationId] = [];
-        inputElement.value = '';
-        convElement.innerHTML = '';
+        clearHistory(currentConversationId);
+        return;
+    } if(prompt.startsWith('/delete')) {
+        deleteConversation(currentConversationId);
         return;
     } if(prompt.startsWith('/speech')) {
         const speechPrompt = prompt.replace('/speech', '').trim();
@@ -132,8 +141,6 @@ function speakText(text) {
     synth.speak(utterance);
 }
 
-
-
 async function getResponseFromServer(prompt) {
     try {
         const promptData = new FormData();
@@ -147,14 +154,11 @@ async function getResponseFromServer(prompt) {
         const data = await response.json();
 
         if (speechMode) {
-            speakText(data.choices[0].message.content); // Utiliser la synthèse vocale pour la réponse
+            speakText(data.choices[0].message.content);
         }
         const chatGptResponseTxt = data.choices[0].message.content;
-        
-        // Ajouter les messages à l'affichage et au stockage
 
-        saveToHistory(chatGptResponseTxt, false); // Sauvegarder l'historique pour l'IA
-
+        saveToHistory(chatGptResponseTxt, false);
 
     } catch (error) {
         console.error('Failed to fetch response: ', error);
