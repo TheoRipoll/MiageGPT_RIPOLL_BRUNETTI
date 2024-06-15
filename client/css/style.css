@@ -16,7 +16,7 @@ body {
 h1 {
     font-size: 33px;
     font-weight: 600;
-    padding: 200px 0;
+    padding: 20px 0;
 }
 
 .side-bar {
@@ -111,7 +111,7 @@ nav {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    height: 400px; 
+    height: 350px; 
     padding: 10px;
 }
 

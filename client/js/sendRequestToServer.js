@@ -9,6 +9,12 @@ function init() {
     outputElement = document.querySelector('#output');
     submitButton = document.querySelector('#submit');
     submitButton.onclick = getMessage;
+    // Si on appuie sur entrée, on envoie le message
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            getMessage();
+        }
+    });
 
     inputElement = document.querySelector('input');
     historyElement = document.querySelector('.history');
@@ -49,19 +55,21 @@ async function getMessage() {
     let prompt = inputElement.value;
     prompt = prompt.toLowerCase();
 
-    if (prompt.startsWith('/image')) {
+    if (!prompt.startsWith('/')) {
+        getResponseFromServer(prompt);
+    }
+    else if (prompt.startsWith('/image')) {
         const imagePrompt = prompt.replace('/image', '').trim();
         getImageFromDallE(imagePrompt);
-    } if(prompt.startsWith('/clear')) {
+    } 
+    else if(prompt.startsWith('/clear')) {
         localStorage.removeItem('chatHistory');
         convElement.innerHTML = '';
-    } if(prompt.startsWith('/speech')) {
+    } 
+    else if(prompt.startsWith('/speech')) {
         const speechPrompt = prompt.replace('/speech', '').trim();
         speechMode = true;
         getResponseFromServer(speechPrompt);
-    }
-     else {
-        getResponseFromServer(prompt);
     }
 
     //addMessageToHistory(prompt, true); // Ajouter le message de l'utilisateur à l'historique
