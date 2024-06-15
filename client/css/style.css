@@ -99,12 +99,39 @@ nav {
 }
 
 .history {
-    padding:10px;
-    margin: 10px;
-    display:flex;
+    display: flex;
     flex-direction: column;
-    height:100%
+    overflow-y: auto;
+    height: 400px; 
+    padding: 10px;
+    border: 1px solid #ccc;
 }
+
+.conv {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 400px; 
+    padding: 10px;
+}
+
+.message {
+    margin: 5px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+}
+
+.user-message {
+    align-self: flex-end;
+    background-color: #424242;
+}
+
+.server-message {
+    align-self: flex-start;
+    background-color: #8c8c8c;
+}
+
 
 .history p {
     cursor:pointer;
