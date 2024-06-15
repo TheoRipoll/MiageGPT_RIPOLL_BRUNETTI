@@ -142,3 +142,48 @@ nav {
     overflow: hidden;
     box-shadow: rgb(38, 57, 77) 0 20px 30px -10px;
 }
+
+#sidebar {
+    display: none;
+    width: 250px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    background-color: #333;  /* Couleur de fond sombre */
+    color: #fff;  /* Texte en blanc pour contraster avec le fond sombre */
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.5);  /* Ombre plus marquée pour un effet de profondeur */
+    overflow-y: auto;
+  }
+  
+  #sidebar label {
+    display: block;  /* Chaque label sur sa propre ligne */
+    margin: 10px 0;  /* Espacement vertical pour la clarté */
+  }
+  
+  #sidebar input[type="text"], #sidebar input[type="radio"] {
+    margin-right: 10px;
+    background-color: #555;  /* Fond des champs de saisie */
+    color: #ddd;  /* Texte des champs de saisie */
+    border: none;  /* Pas de bordure pour un look épuré */
+  }
+  
+  #sidebar input[type="text"] {
+    padding: 8px;
+    width: calc(100% - 18px);  /* Ajustement de la largeur avec le padding */
+  }
+  
+  #sidebar button {
+    background-color: #666;  /* Couleur de fond du bouton */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;  /* Cursor en forme de pointeur sur le bouton */
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);  /* Ombre sous le bouton */
+  }
+  
+  #sidebar button:hover {
+    background-color: #777;  /* Changement de couleur au survol */
+  }  

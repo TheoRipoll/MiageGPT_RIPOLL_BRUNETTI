@@ -59,8 +59,9 @@ async function getMessage() {
         getResponseFromServer(prompt);
     }
     else if (prompt.startsWith('/image')) {
-        const imagePrompt = prompt.replace('/image', '').trim();
-        getImageFromDallE(imagePrompt);
+        //const imagePrompt = prompt.replace('/image', '').trim();
+        //getImageFromDallE(imagePrompt);
+        document.getElementById('sidebar').style.display = 'block';
     } 
     else if(prompt.startsWith('/clear')) {
         localStorage.removeItem('chatHistory');
@@ -83,8 +84,6 @@ function speakText(text) {
     const utterance = new SpeechSynthesisUtterance(text);
     synth.speak(utterance);
 }
-
-
 
 async function getResponseFromServer(prompt) {
     try {
@@ -114,6 +113,24 @@ async function getResponseFromServer(prompt) {
     }
 }
 
+function createDalleImage() {
+    const formData = new FormData(document.getElementById('imageForm'));
+    const data = {
+      subject: formData.get('subject'),
+      artStyle: formData.get('artStyle'),
+      format: formData.get('format'),
+      theme: formData.get('theme'),
+      imageStyle: formData.get('imageStyle')
+    };
+  
+    const dallePrompt = `Create a ${data.format} image in ${data.artStyle} style, ${data.theme} theme, depicting ${data.subject} in a ${data.imageStyle} manner.`;
+  
+    console.log('Sending dalle prompt:', dallePrompt);
+    getImageFromDallE(dallePrompt);
+}
+window.createDalleImage = createDalleImage;
+
+  
 function updateOutput(message) {
     outputElement.textContent = message;  // Mettre à jour le texte de l'élément de sortie
 }

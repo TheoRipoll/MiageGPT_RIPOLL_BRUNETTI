@@ -32,6 +32,37 @@
         <p class="info">Miage GPT, Mini-Projet</p>
     </section>
 
+    <div id="sidebar">
+        <form id="imageForm">
+          <div>
+            <label for="subject">Sujet:</label>
+            <input type="text" id="subject" name="subject">
+          </div>
+          <div>
+            <p>Art Style:</p>
+            <label><input type="radio" name="artStyle" value="Picasso"> Picasso</label>
+            <label><input type="radio" name="artStyle" value="Pixar"> Pixar</label>
+          </div>
+          <div>
+            <p>Format:</p>
+            <label><input type="radio" name="format" value="2D"> 2D</label>
+            <label><input type="radio" name="format" value="3D"> 3D</label>
+          </div>
+          <div>
+            <p>Theme:</p>
+            <label><input type="radio" name="theme" value="Light"> Light</label>
+            <label><input type="radio" name="theme" value="Dark"> Dark</label>
+          </div>
+          <div>
+            <p>Style:</p>
+            <label><input type="radio" name="imageStyle" value="Realistic"> Realistic</label>
+            <label><input type="radio" name="imageStyle" value="Fantasy"> Fantasy</label>
+            <label><input type="radio" name="imageStyle" value="Abstract"> Abstract</label>
+          </div>
+          <button type="button" onclick="createDalleImage()">Generate Image</button>
+        </form>
+      </div>
+
 </body>
 
 </html>
