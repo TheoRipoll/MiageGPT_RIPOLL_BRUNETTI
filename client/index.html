@@ -38,28 +38,58 @@
             <label for="subject">Sujet:</label>
             <input type="text" id="subject" name="subject">
           </div>
+
           <div>
             <p>Art Style:</p>
-            <label><input type="radio" name="artStyle" value="Picasso"> Picasso</label>
-            <label><input type="radio" name="artStyle" value="Pixar"> Pixar</label>
-          </div>
-          <div>
+            <label class="radio-label">Picasso
+                <input type="radio" name="artStyle" value="Picasso">
+                <span class="checkmark"></span>
+            </label>
+            <label class="radio-label">Pixar
+                <input type="radio" name="artStyle" value="Pixar">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        <div>
             <p>Format:</p>
-            <label><input type="radio" name="format" value="2D"> 2D</label>
-            <label><input type="radio" name="format" value="3D"> 3D</label>
-          </div>
-          <div>
+            <label class="radio-label">2D
+                <input type="radio" name="format" value="2D">
+                <span class="checkmark"></span>
+            </label>
+            <label class="radio-label">3D
+                <input type="radio" name="format" value="3D">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        <div>
             <p>Theme:</p>
-            <label><input type="radio" name="theme" value="Light"> Light</label>
-            <label><input type="radio" name="theme" value="Dark"> Dark</label>
-          </div>
-          <div>
+            <label class="radio-label">Light
+                <input type="radio" name="theme" value="Light">
+                <span class="checkmark"></span>
+            </label>
+            <label class="radio-label">Dark
+                <input type="radio" name="theme" value="Dark">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        <div>
             <p>Style:</p>
-            <label><input type="radio" name="imageStyle" value="Realistic"> Realistic</label>
-            <label><input type="radio" name="imageStyle" value="Fantasy"> Fantasy</label>
-            <label><input type="radio" name="imageStyle" value="Abstract"> Abstract</label>
-          </div>
+            <label class="radio-label">Realistic
+                <input type="radio" name="imageStyle" value="Realistic">
+                <span class="checkmark"></span>
+            </label>
+            <label class="radio-label">Fantasy
+                <input type="radio" name="imageStyle" value="Fantasy">
+                <span class="checkmark"></span>
+            </label>
+            <label class="radio-label">Abstract
+                <input type="radio" name="imageStyle" value="Abstract">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        
           <button type="button" onclick="createDalleImage()">Generate Image</button>
+          <button type="button" onclick="closeDalleImage()">Close</button>
         </form>
       </div>
 

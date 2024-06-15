@@ -127,8 +127,17 @@ function createDalleImage() {
   
     console.log('Sending dalle prompt:', dallePrompt);
     getImageFromDallE(dallePrompt);
+
+    document.getElementById('imageForm').reset();
 }
 window.createDalleImage = createDalleImage;
+
+function closeDalleImage() {
+    document.getElementById('sidebar').style.display = 'none';
+
+    document.getElementById('imageForm').reset();
+}
+window.closeDalleImage = closeDalleImage;
 
   
 function updateOutput(message) {
