@@ -90,6 +90,7 @@ async function getResponseFromServer(prompt) {
 
         if (speechMode) {
             speakText(data.choices[0].message.content); // Utiliser la synthèse vocale pour la réponse
+            speechMode = false;
         }
         const chatGptResponseTxt = data.choices[0].message.content;
         
@@ -102,7 +103,6 @@ async function getResponseFromServer(prompt) {
         console.error('Failed to fetch response: ', error);
     }
 }
-
 
 function updateOutput(message) {
     outputElement.textContent = message;  // Mettre à jour le texte de l'élément de sortie
