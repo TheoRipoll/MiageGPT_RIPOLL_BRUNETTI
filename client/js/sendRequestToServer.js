@@ -20,7 +20,7 @@ function init() {
     historyElement = document.querySelector('.history');
     convElement = document.querySelector('.conv');
     butonElement = document.querySelector('button');
-    butonElement.onclick = clearInput;
+    //butonElement.onclick = clearInput;
 
     speechMode = false;
 
@@ -65,6 +65,8 @@ async function getMessage() {
     else if(prompt.startsWith('/clear')) {
         localStorage.removeItem('chatHistory');
         convElement.innerHTML = '';
+        const imageElements = document.querySelectorAll('#output img, .dalle-image');
+        imageElements.forEach(el => el.remove());
     } 
     else if(prompt.startsWith('/speech')) {
         const speechPrompt = prompt.replace('/speech', '').trim();
