@@ -1,11 +1,7 @@
 const endpointURL = 'http://localhost:3001/chat';
 import { getImageFromDallE } from './dallE.js';
 
-let outputElement, submitButton, inputElement, convElement, historyElement, newChatButton, speechMode;
-
-let conversations = JSON.parse(localStorage.getItem('conversations')) || {};
-let currentConversationId = localStorage.getItem('currentConversationId') || null;
-
+let outputElement, submitButton, inputElement, convElement, historyElement, newChatButton, currentConversationId, speechMode;
 
 window.onload = init;
 
@@ -13,56 +9,37 @@ function init() {
     outputElement = document.querySelector('#output');
     submitButton = document.querySelector('#submit');
     submitButton.onclick = getMessage;
+
     inputElement = document.querySelector('input');
     historyElement = document.querySelector('.history');
     convElement = document.querySelector('.conv');
     newChatButton = document.querySelector('button');
 
     newChatButton.onclick = newConversation;
+
     speechMode = false;
 
-    conversations = JSON.parse(localStorage.getItem('conversations')) || {};
-    currentConversationId = localStorage.getItem('currentConversationId');
-
-    loadConversation(currentConversationId);
     loadHistory();
 }
 
 function newConversation() {
-    const convId = 'conv' + Date.now();
-    conversations[convId] = []; // Initialise une nouvelle conversation vide
-    currentConversationId = convId;
+    currentConversationId = 'conv' + Date.now(); 
+    convElement.innerHTML = ''; 
     localStorage.setItem('currentConversationId', currentConversationId);
-    localStorage.setItem('conversations', JSON.stringify(conversations));
-    addConversationToHistory(convId);
-    displayConversation(convId); // Pour rafraîchir l'affichage
+    addConversationToHistory(currentConversationId);
 }
 
 function saveToHistory(message, isUser) {
-    let history = conversations[currentConversationId] || [];
+    let history = JSON.parse(localStorage.getItem(currentConversationId)) || [];
     history.push({ text: message, user: isUser });
-    conversations[currentConversationId] = history;
-    localStorage.setItem('conversations', JSON.stringify(conversations));
-    addMessageToDisplay(message, isUser);
+    localStorage.setItem(currentConversationId, JSON.stringify(history));
 }
 
 function addConversationToHistory(convId) {
     const pElement = document.createElement('p');
     pElement.textContent = `Conversation ${convId}`;
-    pElement.onclick = () => {
-        currentConversationId = convId;
-        localStorage.setItem('currentConversationId', convId);
-        displayConversation(convId);
-    };
+    pElement.onclick = () => loadConversation(convId);
     historyElement.appendChild(pElement);
-}
-
-function displayConversation(convId) {
-    const history = conversations[convId] || [];
-    convElement.innerHTML = ''; 
-    history.forEach(item => {
-        addMessageToDisplay(item.text, item.user);
-    });
 }
 
 function loadConversation(convId) {
@@ -74,14 +51,11 @@ function loadConversation(convId) {
     });
 }
 
-
 function loadHistory() {
-    Object.keys(conversations).forEach(convId => {
-        addConversationToHistory(convId);
+    let history = JSON.parse(localStorage.getItem('chatHistory')) || [];
+    history.forEach(item => {
+        addMessageToHistory(item.text, item.user);
     });
-    if (currentConversationId) {
-        displayConversation(currentConversationId);
-    }
 }
 
 function addMessageToHistory(message, isUser) {
@@ -92,14 +66,6 @@ function addMessageToHistory(message, isUser) {
     convElement.scrollTop = convElement.scrollHeight;
 }
 
-function addMessageToDisplay(message, isUser) {
-    const pElement = document.createElement('p');
-    pElement.textContent = message;
-    pElement.classList.add('message', isUser ? 'user-message' : 'server-message');
-    convElement.appendChild(pElement);
-    convElement.scrollTop = convElement.scrollHeight; // Auto-scroll to bottom
-}
-
 async function getMessage() {
     let prompt = inputElement.value;
     prompt = prompt.toLowerCase();
@@ -108,11 +74,8 @@ async function getMessage() {
         const imagePrompt = prompt.replace('/image', '').trim();
         getImageFromDallE(imagePrompt);
     } if(prompt.startsWith('/clear')) {
-        saveToHistory(prompt, true);
-        conversations[currentConversationId] = [];
-        inputElement.value = '';
+        localStorage.removeItem('chatHistory');
         convElement.innerHTML = '';
-        return;
     } if(prompt.startsWith('/speech')) {
         const speechPrompt = prompt.replace('/speech', '').trim();
         speechMode = true;
@@ -151,12 +114,17 @@ async function getResponseFromServer(prompt) {
         }
         const chatGptResponseTxt = data.choices[0].message.content;
         
-        // Ajouter les messages à l'affichage et au stockage
-
-        saveToHistory(chatGptResponseTxt, false); // Sauvegarder l'historique pour l'IA
-
+        // Ajouter le message de l'utilisateur à l'historique
+        addMessageToHistory(prompt, true);
+        // Ajouter la réponse du serveur à l'historique
+        addMessageToHistory(chatGptResponseTxt, false);
 
     } catch (error) {
         console.error('Failed to fetch response: ', error);
     }
+}
+
+
+function updateOutput(message) {
+    outputElement.textContent = message;  // Mettre à jour le texte de l'élément de sortie
 }
