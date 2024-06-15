@@ -1,7 +1,7 @@
 const endpointURL = 'http://localhost:3001/chat';
 import { getImageFromDallE } from './dallE.js';
 
-let outputElement, submitButton, inputElement, convElement, historyElement, newChatButton, currentConversationId, speechMode;
+let outputElement, submitButton, inputElement, convElement, historyElement, butonElement, speechMode;
 
 window.onload = init;
 
@@ -13,42 +13,18 @@ function init() {
     inputElement = document.querySelector('input');
     historyElement = document.querySelector('.history');
     convElement = document.querySelector('.conv');
-    newChatButton = document.querySelector('button');
-
-    newChatButton.onclick = newConversation;
+    butonElement = document.querySelector('button');
+    butonElement.onclick = clearInput;
 
     speechMode = false;
 
-    loadHistory();
-}
-
-function newConversation() {
-    currentConversationId = 'conv' + Date.now(); 
-    convElement.innerHTML = ''; 
-    localStorage.setItem('currentConversationId', currentConversationId);
-    addConversationToHistory(currentConversationId);
+    loadHistory(); // Charger l'historique au démarrage de l'application
 }
 
 function saveToHistory(message, isUser) {
-    let history = JSON.parse(localStorage.getItem(currentConversationId)) || [];
+    let history = JSON.parse(localStorage.getItem('chatHistory')) || [];
     history.push({ text: message, user: isUser });
-    localStorage.setItem(currentConversationId, JSON.stringify(history));
-}
-
-function addConversationToHistory(convId) {
-    const pElement = document.createElement('p');
-    pElement.textContent = `Conversation ${convId}`;
-    pElement.onclick = () => loadConversation(convId);
-    historyElement.appendChild(pElement);
-}
-
-function loadConversation(convId) {
-    currentConversationId = convId;
-    const history = JSON.parse(localStorage.getItem(convId)) || [];
-    convElement.innerHTML = '';
-    history.forEach(item => {
-        addMessageToHistory(item.text, item.user);
-    });
+    localStorage.setItem('chatHistory', JSON.stringify(history));
 }
 
 function loadHistory() {
@@ -61,9 +37,12 @@ function loadHistory() {
 function addMessageToHistory(message, isUser) {
     const pElement = document.createElement('p');
     pElement.textContent = message;
+    // Appliquer des classes CSS pour aligner les messages à gauche ou à droite
     pElement.classList.add('message', isUser ? 'user-message' : 'server-message');
+
+    // Ajouter le nouvel élément à la fin de l'historique pour suivre l'ordre de la conversation
     convElement.appendChild(pElement);
-    convElement.scrollTop = convElement.scrollHeight;
+    convElement.scrollTop = convElement.scrollHeight; // Faire défiler vers le bas à chaque nouveau message
 }
 
 async function getMessage() {
@@ -85,8 +64,8 @@ async function getMessage() {
         getResponseFromServer(prompt);
     }
 
+    //addMessageToHistory(prompt, true); // Ajouter le message de l'utilisateur à l'historique
     inputElement.value = '';
-    saveToHistory(prompt, true);
 }
 
 function speakText(text) {
